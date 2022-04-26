@@ -1,0 +1,1 @@
+{"version":3,"file":"board-games.js","sourceRoot":"","sources":["../../../src/models/board-games.ts"],"names":[],"mappings":"AAEA,MAAM,OAAO,UAAU;IAAvB;QACY,eAAU,GAAgB,EAAE,CAAC;IAYzC,CAAC;IAVU,GAAG,CAAC,SAAoB;QAC3B,IAAI,CAAC,UAAU,CAAC,IAAI,CAAC,SAAS,CAAC,CAAC;IACpC,CAAC;IAEM,IAAI;QACP,OAAO,IAAI,CAAC,UAAU,CAAC;IAC3B,CAAC;CAIJ"}
