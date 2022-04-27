@@ -8,13 +8,14 @@ export class BoardGameController {
     private boardGameView = new BoardGameView('#boardGameView');
 
     constructor() {
-        this.boardGameView.update(this.boardgames);
+        this.importData();
     }
 
     public importData(): void {
+        console.log("importing data");
         this.boardgameservice
             .obtainBoardGames().then(myboardgame => {
-                    this.boardgames.add(myboardgame);
+                this.boardgames.add(myboardgame);
                 this.boardGameView.update(this.boardgames);
             });
     }

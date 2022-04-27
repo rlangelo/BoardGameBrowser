@@ -4,5 +4,8 @@ export class BoardGame {
         public readonly imageurl: string, 
     ) {}
 
+    public static create(namestring: string, imageurlstring: string): BoardGame {
+        return new BoardGame(namestring, imageurlstring)
+    }
 
 }

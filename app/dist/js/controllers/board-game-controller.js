@@ -6,9 +6,10 @@ export class BoardGameController {
         this.boardgameservice = new BoardGameService();
         this.boardgames = new BoardGames();
         this.boardGameView = new BoardGameView('#boardGameView');
-        this.boardGameView.update(this.boardgames);
+        this.importData();
     }
     importData() {
+        console.log("importing data");
         this.boardgameservice
             .obtainBoardGames().then(myboardgame => {
             this.boardgames.add(myboardgame);
