@@ -13,6 +13,10 @@ export class BoardGameView extends View<BoardGames> {
                         <h3 class="card-title">${boardgame.name}</h3>
                     </div>
                 </div>
+
+                <br>
+                <br>
+                <br>
                 `
             }).join('')}`;
     }
