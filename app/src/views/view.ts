@@ -1,19 +1,19 @@
 export abstract class View<T> {
 
-    protected elemento: HTMLElement;
+    protected element: HTMLElement;
 
-    constructor(seletor: string) {
-        const elemento = document.querySelector(seletor);
+    constructor(selector: string) {
+        const elemento = document.querySelector(selector);
         if (elemento) {
-            this.elemento = elemento as HTMLElement;
+            this.element = elemento as HTMLElement;
         } else {
-            throw Error(`Seletor ${seletor} não existe no DOM. Verifique`);
+            throw Error(`Selector ${selector} does not exist in the DOM.`);
         }
     }
 
     public update(model: T): void {
         let template = this.template(model);
-        this.elemento.innerHTML = template;
+        this.element.innerHTML = template;
     }
 
     protected abstract template(model: T): string;

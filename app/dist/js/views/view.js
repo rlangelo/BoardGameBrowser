@@ -1,16 +1,16 @@
 export class View {
-    constructor(seletor) {
-        const elemento = document.querySelector(seletor);
+    constructor(selector) {
+        const elemento = document.querySelector(selector);
         if (elemento) {
-            this.elemento = elemento;
+            this.element = elemento;
         }
         else {
-            throw Error(`Seletor ${seletor} não existe no DOM. Verifique`);
+            throw Error(`Selector ${selector} does not exist in the DOM.`);
         }
     }
     update(model) {
         let template = this.template(model);
-        this.elemento.innerHTML = template;
+        this.element.innerHTML = template;
     }
 }
 //# sourceMappingURL=view.js.map

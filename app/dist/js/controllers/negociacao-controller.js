@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { domInjector } from '../decorators/dom-injector.js';
 import { inspect } from '../decorators/inspect.js';
-import { logarTempoDeExecucao } from '../decorators/logar-tempo-de-execucao.js';
+import { logExecutionTime } from '../decorators/log-execution-time.js';
 import { DiasDaSemana } from '../enums/dias-da-semana.js';
 import { Negociacao } from '../models/negociacao.js';
 import { Negociacoes } from '../models/negociacoes.js';
@@ -78,6 +78,6 @@ __decorate([
 ], NegociacaoController.prototype, "inputValor", void 0);
 __decorate([
     inspect,
-    logarTempoDeExecucao()
+    logExecutionTime()
 ], NegociacaoController.prototype, "adiciona", null);
 //# sourceMappingURL=negociacao-controller.js.map

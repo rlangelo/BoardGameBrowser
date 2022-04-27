@@ -1,6 +1,6 @@
 import { domInjector } from '../decorators/dom-injector.js';
 import { inspect } from '../decorators/inspect.js';
-import { logarTempoDeExecucao } from '../decorators/logar-tempo-de-execucao.js';
+import { logExecutionTime } from '../decorators/log-execution-time.js';
 import { DiasDaSemana } from '../enums/dias-da-semana.js';
 import { Negociacao } from '../models/negociacao.js';
 import { Negociacoes } from '../models/negociacoes.js';
@@ -26,7 +26,7 @@ export class NegociacaoController {
     }
 
     @inspect
-    @logarTempoDeExecucao()
+    @logExecutionTime()
     public adiciona(): void {
         /*
             Zé, você já viu isso?
