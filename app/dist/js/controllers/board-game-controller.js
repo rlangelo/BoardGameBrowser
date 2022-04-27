@@ -11,8 +11,10 @@ export class BoardGameController {
     importData() {
         console.log("importing data");
         this.boardgameservice
-            .obtainBoardGames().then(myboardgame => {
-            this.boardgames.add(myboardgame);
+            .obtainBoardGames().then(boardgames => {
+            for (let boardgame of boardgames) {
+                this.boardgames.add(boardgame);
+            }
             this.boardGameView.update(this.boardgames);
         });
     }
