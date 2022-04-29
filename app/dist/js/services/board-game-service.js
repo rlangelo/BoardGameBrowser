@@ -1,5 +1,18 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { BoardGame } from "../models/board-game.js";
+import { Delay } from "../utils/delay.js";
 export class BoardGameService {
+    constructor() {
+        this.delay = new Delay();
+    }
     obtainBoardGames() {
         return fetch('https://api.geekdo.com/xmlapi2/hot?boardgame')
             .then(res => res.text()).then((data) => {
@@ -26,12 +39,28 @@ export class BoardGameService {
             const parser = new DOMParser();
             const xmlDOM = parser.parseFromString(data, "text/xml");
             const bgNames = xmlDOM.getElementsByTagName("name");
-            const imgURL = xmlDOM.getElementsByTagName("thumbnail");
+            const imgURL = xmlDOM.getElementsByTagName("image");
             var bgNameValue = bgNames[0].getAttribute("value");
             var bgName = bgNameValue !== null ? bgNameValue : '';
-            var imgValue = imgURL[0].getAttribute("value");
-            var img = imgValue !== null ? imgValue : '';
-            return new BoardGame(bgName, img);
+            var imgValue = "";
+            if (imgURL[0]) {
+                imgValue = imgURL[0].innerHTML;
+            }
+            return new BoardGame(bgName, imgValue);
+        });
+    }
+    fetchBoardGames(items) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var boardgames = [];
+            console.log(items.length);
+            for (let i = 0; i < items.length; i++) {
+                var idValue = items[i].getAttribute("id");
+                var id = idValue !== null ? idValue : '';
+                var boardgame = yield this.fetchBoardGame(id);
+                boardgames.push(boardgame);
+                this.delay.wait(1);
+            }
+            return boardgames;
         });
     }
     searchBoardGame(searchQuery) {
@@ -43,21 +72,13 @@ export class BoardGameService {
             }
             apiCall = apiCall.concat(searchParameters[i]);
         }
-        apiCall = apiCall.concat(`&type=boardgame,boardgameexpansion`);
-        console.log(apiCall);
+        apiCall = apiCall.concat(`&type=boardgame`);
         return fetch(apiCall).then(res => res.text()).then((data) => {
             var boardgames = [];
             const parser = new DOMParser();
             const xmlDOM = parser.parseFromString(data, "text/xml");
             const items = xmlDOM.getElementsByTagName("item");
-            for (let i = 0; i < items.length; i++) {
-                var idValue = items[i].getAttribute("id");
-                var id = idValue !== null ? idValue : '';
-                this.fetchBoardGame(id).then(boardgame => {
-                    boardgames.push(boardgame);
-                });
-            }
-            return boardgames;
+            return this.fetchBoardGames(items);
         });
     }
 }

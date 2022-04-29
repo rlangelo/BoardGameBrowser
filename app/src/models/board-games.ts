@@ -11,6 +11,10 @@ export class BoardGames {
         return this.boardgames;
     }
 
+    public emptyList(): void {
+        this.boardgames = [];
+    }
+
 
 
 }

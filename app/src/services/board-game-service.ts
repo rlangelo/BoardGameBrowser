@@ -1,21 +1,8 @@
-import { BoardGameInterface } from "../interfaces/board-game-interface.js";
 import { BoardGame } from "../models/board-game.js";
+import { Delay } from "../utils/delay.js";
 
 export class BoardGameService {
-
-    /*public obtainBoardGames(): Promise<BoardGame> {
-        return fetch('https://cors-anywhere.herokuapp.com/https://api.geekdo.com/xmlapi2/thing?id=123540')
-        .then(res=>res.text()).then((data: string) => {
-                const parser = new DOMParser();
-                const xmlDOM = parser.parseFromString(data,"text/xml");
-                const nameValue = xmlDOM.getElementsByTagName("name")[0].getAttribute("value");
-                const bgName : string = nameValue !== null ? nameValue : '';
-                console.log(bgName);
-                const imgURL = xmlDOM.getElementsByTagName("image")[0].innerHTML;
-                console.log(imgURL);
-                return new BoardGame(bgName,imgURL);
-           });
-    }*/
+    private delay = new Delay();
 
     public obtainBoardGames(): Promise<BoardGame[]> {
         return fetch('https://api.geekdo.com/xmlapi2/hot?boardgame')
@@ -44,16 +31,30 @@ export class BoardGameService {
             const parser = new DOMParser();
             const xmlDOM = parser.parseFromString(data,"text/xml");
             const bgNames = xmlDOM.getElementsByTagName("name");
-            const imgURL = xmlDOM.getElementsByTagName("thumbnail");
+            const imgURL = xmlDOM.getElementsByTagName("image");
             var bgNameValue = bgNames[0].getAttribute("value");
             var bgName : string = bgNameValue !== null ? bgNameValue : '';
-            var imgValue = imgURL[0].getAttribute("value");
-            var img : string = imgValue !== null ? imgValue : '';
-            return new BoardGame(bgName,img);
+            var imgValue = "";
+            if (imgURL[0]) {
+                imgValue = imgURL[0].innerHTML;
+            }
+            return new BoardGame(bgName,imgValue);
         });
     }
-    //TODO turn fetchBoardGame into fetchBoardGames and feed an array of ids. Do the iteration in that function which then returns a list of board games
-    //then searchBoardGame will just return the list of the boardgames
+
+    public async fetchBoardGames(items: HTMLCollectionOf<Element>): Promise<BoardGame[]> {
+        var boardgames: BoardGame[] = [];
+        console.log(items.length);
+        for (let i = 0; i < items.length; i++) {
+            var idValue = items[i].getAttribute("id");
+            var id : string = idValue !== null ? idValue : '';
+            var boardgame: BoardGame = await this.fetchBoardGame(id);
+            boardgames.push(boardgame);
+            this.delay.wait(1);
+        }
+        return boardgames;
+    }
+
     public searchBoardGame(searchQuery: string): Promise<BoardGame[]> {
         const searchParameters = searchQuery.split(" ");
         var apiCall = `https://api.geekdo.com/xmlapi2/search?query=`
@@ -63,21 +64,14 @@ export class BoardGameService {
             }
             apiCall = apiCall.concat(searchParameters[i]);
         }
-        apiCall = apiCall.concat(`&type=boardgame,boardgameexpansion`)
-        console.log(apiCall);
+        apiCall = apiCall.concat(`&type=boardgame`)
         return fetch(apiCall).then(res=>res.text()).then((data: string) => {
-            var boardgames: BoardGame[] = [];
-            const parser = new DOMParser();
-            const xmlDOM = parser.parseFromString(data,"text/xml");
-            const items = xmlDOM.getElementsByTagName("item");
-            for (let i = 0; i < items.length; i++) {
-                var idValue = items[i].getAttribute("id");
-                var id : string = idValue !== null ? idValue : '';
-                this.fetchBoardGame(id).then(boardgame => {
-                    boardgames.push(boardgame);
-                });
-            }
-            return boardgames;
+        var boardgames: BoardGame[] = [];
+        const parser = new DOMParser();
+        const xmlDOM = parser.parseFromString(data,"text/xml");
+        const items = xmlDOM.getElementsByTagName("item");
+        return this.fetchBoardGames(items);
         });
     }
 }
+

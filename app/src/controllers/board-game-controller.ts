@@ -27,8 +27,8 @@ export class BoardGameController {
 
     public searchGame(): void {
         if (this.searchData.value != "") {
+            this.boardgames.emptyList();
             this.boardgameservice.searchBoardGame(this.searchData.value).then(boardgames => {
-                console.log(boardgames);
                 for (let boardgame of boardgames) {
                     this.boardgames.add(boardgame);
                 }

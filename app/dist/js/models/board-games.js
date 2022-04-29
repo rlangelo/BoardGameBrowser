@@ -8,5 +8,8 @@ export class BoardGames {
     list() {
         return this.boardgames;
     }
+    emptyList() {
+        this.boardgames = [];
+    }
 }
 //# sourceMappingURL=board-games.js.map
